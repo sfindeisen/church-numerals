@@ -1,3 +1,5 @@
+import Test.QuickCheck
+
 type Church a = (a -> a) -> a -> a
 
 church :: Integer -> Church Integer
@@ -7,6 +9,21 @@ church n = \f -> \x -> f (church (n-1) f x)
 unchurch :: Church Integer -> Integer
 unchurch cn = cn (+ 1) 0
 
+---------------------------------------
+---- QuickCheck
+---------------------------------------
+
+gen100 :: Gen Integer
+gen100 = fmap (flip mod 100) (arbitrary :: Gen Integer)
+
+prop_roundtrip x = x == unchurch (church x)
+
+---------------------------------------
+---- main
+---------------------------------------
+
+check = quickCheck
+
 main :: IO ()
 main = do
-    putStrLn $ show $ unchurch (church 5)
+    check $ forAll gen100 prop_roundtrip
