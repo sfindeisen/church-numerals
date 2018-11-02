@@ -14,7 +14,7 @@ unchurch cn = cn (+ 1) 0
 ---------------------------------------
 
 gen100 :: Gen Integer
-gen100 = fmap (flip mod 100) (arbitrary :: Gen Integer)
+gen100 = choose (0, 100)
 
 prop_roundtrip x = x == unchurch (church x)
 
@@ -22,6 +22,7 @@ prop_roundtrip x = x == unchurch (church x)
 ---- main
 ---------------------------------------
 
+--check = verboseCheck
 check = quickCheck
 
 main :: IO ()
