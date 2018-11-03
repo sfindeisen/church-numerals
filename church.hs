@@ -15,6 +15,9 @@ plus m n f x = m f (n f x)
 succ :: Church Integer -> Church Integer
 succ n f x = f (n f x)
 
+mul :: Church Integer -> Church Integer -> Church Integer
+mul m n f x = m (n f) x
+
 ---------------------------------------
 ---- QuickCheck
 ---------------------------------------
@@ -31,6 +34,9 @@ prop_plus x y =
 prop_succ x =
     (x+1) == unchurch (Main.succ (church x))
 
+prop_mul x y =
+    (x*y) == unchurch (mul (church x) (church y))
+
 ---------------------------------------
 ---- main
 ---------------------------------------
@@ -43,3 +49,4 @@ main = do
     check $ forAll gen100 prop_roundtrip
     check $ forAll gen100 (\x -> forAll gen100 (prop_plus x))
     check $ forAll gen100 prop_succ
+    check $ forAll gen100 (\x -> forAll gen100 (prop_mul x))
