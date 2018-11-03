@@ -12,6 +12,9 @@ unchurch cn = cn (+ 1) 0
 plus :: Church Integer -> Church Integer -> Church Integer
 plus m n f x = m f (n f x)
 
+succ :: Church Integer -> Church Integer
+succ n f x = f (n f x)
+
 ---------------------------------------
 ---- QuickCheck
 ---------------------------------------
@@ -25,6 +28,9 @@ prop_roundtrip x =
 prop_plus x y =
     (x+y) == unchurch (plus (church x) (church y))
 
+prop_succ x =
+    (x+1) == unchurch (Main.succ (church x))
+
 ---------------------------------------
 ---- main
 ---------------------------------------
@@ -36,3 +42,4 @@ main :: IO ()
 main = do
     check $ forAll gen100 prop_roundtrip
     check $ forAll gen100 (\x -> forAll gen100 (prop_plus x))
+    check $ forAll gen100 prop_succ
