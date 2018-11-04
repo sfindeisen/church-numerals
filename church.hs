@@ -2,33 +2,33 @@ import Test.QuickCheck
 
 type Church a = (a -> a) -> a -> a
 
-church :: Integer -> Church Integer
+church :: Integer -> Church a
 church 0 f x = x
 church n f x = f (church (n-1) f x)
 
 unchurch :: Church Integer -> Integer
 unchurch cn = cn (+ 1) 0
 
-zero :: Church Integer
+zero :: Church a
 zero = church 0
 
-one :: Church Integer
+one :: Church a
 one = church 1
 
-two :: Church Integer
+two :: Church a
 two = church 2
 
 is_zero :: Church Integer -> Bool
 is_zero n =
     1 == (n (\z -> 0) 1)
 
-plus :: Church Integer -> Church Integer -> Church Integer
+plus :: Church a -> Church a -> Church a
 plus m n f x = m f (n f x)
 
-inc :: Church Integer -> Church Integer
+inc :: Church a -> Church a
 inc n f x = f (n f x)
 
-mul :: Church Integer -> Church Integer -> Church Integer
+mul :: Church a -> Church a -> Church a
 mul m n f x = m (n f) x
 
 ---------------------------------------
