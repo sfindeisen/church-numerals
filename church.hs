@@ -25,8 +25,8 @@ is_zero n =
 plus :: Church Integer -> Church Integer -> Church Integer
 plus m n f x = m f (n f x)
 
-succ :: Church Integer -> Church Integer
-succ n f x = f (n f x)
+inc :: Church Integer -> Church Integer
+inc n f x = f (n f x)
 
 mul :: Church Integer -> Church Integer -> Church Integer
 mul m n f x = m (n f) x
@@ -47,8 +47,8 @@ prop_zero x =
 prop_plus x y =
     (x+y) == unchurch (plus (church x) (church y))
 
-prop_succ x =
-    (x+1) == unchurch (Main.succ (church x))
+prop_inc x =
+    (x+1) == unchurch (inc (church x))
 
 prop_mul x y =
     (x*y) == unchurch (mul (church x) (church y))
@@ -66,5 +66,5 @@ main = do
     check $ once (prop_zero 0)
     check $ forAll gen100 prop_zero
     check $ forAll gen100 (\x -> forAll gen100 (prop_plus x))
-    check $ forAll gen100 prop_succ
+    check $ forAll gen100 prop_inc
     check $ forAll gen100 (\x -> forAll gen100 (prop_mul x))
