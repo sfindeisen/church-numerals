@@ -19,7 +19,7 @@ plus :: Church a -> Church a -> Church a
 plus n m f = n f . m f
 
 mul :: Church a -> Church a -> Church a
-mul m n f x = m (n f) x
+mul m n f = m (n f)
 
 unchurch :: (Num a) => Church a -> a
 unchurch cn = cn (+ 1) 0
