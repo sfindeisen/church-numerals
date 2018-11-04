@@ -32,7 +32,7 @@ mul :: Church Integer -> Church Integer -> Church Integer
 mul m n f x = m (n f) x
 
 ---------------------------------------
----- QuickCheck
+-- QuickCheck
 ---------------------------------------
 
 gen100 :: Gen Integer
@@ -54,7 +54,7 @@ prop_mul x y =
     (x*y) == unchurch (mul (church x) (church y))
 
 ---------------------------------------
----- main
+-- main
 ---------------------------------------
 
 -- check = verboseCheck
