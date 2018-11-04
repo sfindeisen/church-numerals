@@ -41,6 +41,10 @@ gen100 = choose (0, 100)
 prop_roundtrip x =
     x == unchurch (church x)
 
+prop_church_string :: Integer -> Bool
+prop_church_string x =
+    x == (toInteger $ length $ (church x) ('c':) [])
+
 prop_zero x =
     (0 == x) == is_zero (church x)
 
@@ -63,6 +67,7 @@ check = quickCheck
 main :: IO ()
 main = do
     check $ forAll gen100 prop_roundtrip
+    check $ forAll gen100 prop_church_string
     check $ once (prop_zero 0)
     check $ forAll gen100 prop_zero
     check $ forAll gen100 (\x -> forAll gen100 (prop_plus x))
