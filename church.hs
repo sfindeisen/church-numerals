@@ -16,7 +16,7 @@ inc :: Church a -> Church a
 inc n f = f . n f
 
 plus :: Church a -> Church a -> Church a
-plus m n f x = m f (n f x)
+plus n m f = n f . m f
 
 mul :: Church a -> Church a -> Church a
 mul m n f x = m (n f) x
