@@ -6,21 +6,11 @@ church :: Integer -> Church a
 church 0 f x = x
 church n f x = f (church (n-1) f x)
 
-unchurch :: Church Integer -> Integer
-unchurch cn = cn (+ 1) 0
-
 zero :: Church a
 zero = church 0
 
 one :: Church a
 one = church 1
-
-two :: Church a
-two = church 2
-
-is_zero :: Church Integer -> Bool
-is_zero n =
-    1 == (n (\z -> 0) 1)
 
 plus :: Church a -> Church a -> Church a
 plus m n f x = m f (n f x)
@@ -30,6 +20,13 @@ inc n f x = f (n f x)
 
 mul :: Church a -> Church a -> Church a
 mul m n f x = m (n f) x
+
+unchurch :: (Num a) => Church a -> a
+unchurch cn = cn (+ 1) 0
+
+is_zero :: (Eq a, Num a) => Church a -> Bool
+is_zero n =
+    1 == (n (\z -> 0) 1)
 
 ---------------------------------------
 -- QuickCheck
