@@ -38,6 +38,7 @@ mul m n f x = m (n f) x
 gen100 :: Gen Integer
 gen100 = choose (0, 100)
 
+prop_roundtrip :: Integer -> Bool
 prop_roundtrip x =
     x == unchurch (church x)
 
@@ -45,15 +46,19 @@ prop_church_string :: Integer -> Bool
 prop_church_string x =
     x == (toInteger $ length $ (church x) ('c':) [])
 
+prop_zero :: Integer -> Bool
 prop_zero x =
     (0 == x) == is_zero (church x)
 
+prop_plus :: Integer -> Integer -> Bool
 prop_plus x y =
     (x+y) == unchurch (plus (church x) (church y))
 
+prop_inc :: Integer -> Bool
 prop_inc x =
     (x+1) == unchurch (inc (church x))
 
+prop_mul :: Integer -> Integer -> Bool
 prop_mul x y =
     (x*y) == unchurch (mul (church x) (church y))
 
