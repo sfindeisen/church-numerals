@@ -33,8 +33,8 @@ mul n m f = n (m f)
 --
 -- expo :: Church a -> Church a -> Church a
 --
--- although it is ok to pass these parameters.
-expo :: t -> (t -> u) -> u
+-- although it would accept these parameters and yield the correct
+-- (Church a) result (see example below).
 expo n m = m n
 
 unchurch :: (Num a) => Church a -> a
