@@ -29,12 +29,11 @@ mul n m f = n (m f)
 -- (church 2) n = n . n . id
 -- ...
 --
--- Note this function cannot be explicitly typed as:
+-- However this function cannot be explicitly typed as:
 --
 -- expo :: Church a -> Church a -> Church a
 --
--- although it is okay to pass these parameters and the
--- resulting type matches too.
+-- although it is ok to pass these parameters.
 expo :: t -> (t -> u) -> u
 expo n m = m n
 
