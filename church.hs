@@ -44,7 +44,7 @@ expo n m = m n
 -- dec :: Church a -> Church a
 --
 -- does not work.
-dec n f x = n (\g -> \h -> h (g f)) (\u -> x) (\u -> u)
+dec n f x = n (\g -> \h -> h (g f)) (\u -> x) id
 
 unchurch :: (Num a) => Church a -> a
 unchurch cn = cn (+ 1) 0
