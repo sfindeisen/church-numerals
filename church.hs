@@ -3,8 +3,8 @@ import Test.QuickCheck
 type Church a = (a -> a) -> a -> a
 
 church :: Integer -> Church a
-church 0 f x = x
-church n f x = f (church (n-1) f x)
+church 0 f = id
+church n f = f . (church (n-1) f)
 
 zero :: Church a
 zero = church 0
@@ -21,6 +21,23 @@ plus n m f = n f . m f
 mul :: Church a -> Church a -> Church a
 mul n m f = n (m f)
 
+-- The exponential function: expo n m = m n == n^m . This works by the
+-- virtue of currying:
+--
+-- (church 0) n = id
+-- (church 1) n = n . id
+-- (church 2) n = n . n . id
+-- ...
+--
+-- Note this function cannot be explicitly typed as:
+--
+-- expo :: Church a -> Church a -> Church a
+--
+-- although it is okay to pass these parameters and the
+-- resulting type matches too.
+expo :: t -> (t -> u) -> u
+expo n m = m n
+
 unchurch :: (Num a) => Church a -> a
 unchurch cn = cn (+ 1) 0
 
@@ -34,6 +51,12 @@ is_zero n =
 
 gen100 :: Gen Integer
 gen100 = choose (0, 100)
+
+gen10 :: Gen Integer
+gen10 = choose (0, 10)
+
+gen5 :: Gen Integer
+gen5 = choose (0, 5)
 
 prop_roundtrip :: Integer -> Bool
 prop_roundtrip x =
@@ -59,6 +82,10 @@ prop_mul :: Integer -> Integer -> Bool
 prop_mul x y =
     (x*y) == unchurch (mul (church x) (church y))
 
+prop_expo :: Integer -> Integer -> Bool
+prop_expo x y =
+    (x^y) == unchurch (expo (church x) (church y))
+
 ---------------------------------------
 -- main
 ---------------------------------------
@@ -75,3 +102,4 @@ main = do
     check $ forAll gen100 (\x -> forAll gen100 (prop_plus x))
     check $ forAll gen100 prop_inc
     check $ forAll gen100 (\x -> forAll gen100 (prop_mul x))
+    check $ forAll gen10  (\x -> forAll gen5 (prop_expo x))
