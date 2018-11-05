@@ -37,6 +37,15 @@ mul n m f = n (m f)
 -- (Church a) result (see example below).
 expo n m = m n
 
+-- The predecessor function.
+--
+-- Typing problem again:
+--
+-- dec :: Church a -> Church a
+--
+-- does not work.
+dec n f x = n (\g -> \h -> h (g f)) (\u -> x) (\u -> u)
+
 unchurch :: (Num a) => Church a -> a
 unchurch cn = cn (+ 1) 0
 
@@ -85,6 +94,10 @@ prop_expo :: Integer -> Integer -> Bool
 prop_expo x y =
     (x^y) == unchurch (expo (church x) (church y))
 
+prop_dec :: Integer -> Bool
+prop_dec x =
+    (if (0 == x) then 0 else (x-1)) == unchurch (dec (church x))
+
 ---------------------------------------
 -- main
 ---------------------------------------
@@ -102,3 +115,5 @@ main = do
     check $ forAll gen100 prop_inc
     check $ forAll gen100 (\x -> forAll gen100 (prop_mul x))
     check $ forAll gen10  (\x -> forAll gen5 (prop_expo x))
+    check $ once (prop_dec 0)
+    check $ forAll gen100 prop_dec
