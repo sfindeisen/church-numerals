@@ -15,8 +15,8 @@ one = church 1
 inc :: Church a -> Church a
 inc n f = f . n f
 
-plus :: Church a -> Church a -> Church a
-plus n m f = n f . m f
+add :: Church a -> Church a -> Church a
+add n m f = n f . m f
 
 mul :: Church a -> Church a -> Church a
 mul n m f = n (m f)
@@ -78,9 +78,9 @@ prop_zero :: Integer -> Bool
 prop_zero x =
     (0 == x) == is_zero (church x)
 
-prop_plus :: Integer -> Integer -> Bool
-prop_plus x y =
-    (x+y) == unchurch (plus (church x) (church y))
+prop_add :: Integer -> Integer -> Bool
+prop_add x y =
+    (x+y) == unchurch (add (church x) (church y))
 
 prop_inc :: Integer -> Bool
 prop_inc x =
@@ -111,7 +111,7 @@ main = do
     check $ forAll gen100 prop_church_string
     check $ once (prop_zero 0)
     check $ forAll gen100 prop_zero
-    check $ forAll gen100 (\x -> forAll gen100 (prop_plus x))
+    check $ forAll gen100 (\x -> forAll gen100 (prop_add x))
     check $ forAll gen100 prop_inc
     check $ forAll gen100 (\x -> forAll gen100 (prop_mul x))
     check $ forAll gen10  (\x -> forAll gen5 (prop_expo x))
