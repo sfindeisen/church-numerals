@@ -1,6 +1,8 @@
+{-# LANGUAGE RankNTypes #-}
+
 import Test.QuickCheck
 
-type Church a = (a -> a) -> a -> a
+type Church a = forall a . (a -> a) -> a -> a
 
 church :: Integer -> Church a
 church 0 f = id
@@ -29,21 +31,14 @@ mul n m f = n (m f)
 -- (church 2) n = n . n . id
 -- ...
 --
--- However this function cannot be explicitly typed as:
---
--- expo :: Church a -> Church a -> Church a
---
--- although it would accept these parameters and yield the correct
--- (Church a) result (see example below).
+-- The type signature depends on RankNTypes.
+expo :: Church a -> Church a -> Church a
 expo n m = m n
 
 -- The predecessor function.
 --
--- Typing problem again:
---
--- dec :: Church a -> Church a
---
--- does not work.
+-- The type signature depends on RankNTypes.
+dec :: Church a -> Church a
 dec n f x = n (\g -> \h -> h (g f)) (\u -> x) id
 
 unchurch :: (Num a) => Church a -> a
